@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: orders-service
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/orders_db
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate        # never 'update' in real code — Flyway owns the schema
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
+server:
+  port: 8081                    # orders=8081; users will be 8082, etc.
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info    # expose only what we need, not everything

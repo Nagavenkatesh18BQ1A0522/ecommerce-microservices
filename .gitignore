@@ -1,0 +1,23 @@
+# Root-level ignores for the monorepo.
+# Each service also has its own .gitignore for build output (target/, etc.).
+
+### Secrets & local overrides (never commit) ###
+*.env
+.env
+application-local.yml
+application-local.properties
+*.pem
+*.key
+
+### OS files ###
+.DS_Store
+Thumbs.db
+
+### IDEs ###
+.idea/
+*.iml
+.vscode/
+
+### Logs ###
+*.log
+logs/
