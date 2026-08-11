@@ -75,9 +75,7 @@ class OrderControllerTest {
     @Test
     void getOrder_returns404_whenOrderNotFound() throws Exception{
 
-        OrderResponse stub = new OrderResponse(
-                1L, 1L, "BOOK-123", 2, new BigDecimal("49.99"),
-                OrderStatus.PLACED, Instant.parse("2026-01-01T00:00:00Z"));
+       
         when(orderService.getOrder(999L)).thenThrow(new OrderNotFound(999L));
         mockMvc.perform(get("/orders/999"))
                 .andExpect(status().isNotFound())
