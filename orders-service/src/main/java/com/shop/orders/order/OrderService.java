@@ -15,10 +15,21 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
     @Transactional
-    public OrderResponse createOrder(CreateOrderRequest request){
+    public OrderResponse createOrder(CreateOrderRequest request) {
         Order order = new Order(request.customerId(), request.productCode(), request.quantity(), request.amount());
-        Order saved =   orderRepository.save(order);
-        return new OrderResponse(saved.getId(), saved.getCustomerId(), saved.getProductCode(), saved.getQuantity(), saved.getAmount(),saved.getStatus(),saved.getCreatedAt());
+        Order saved = orderRepository.save(order);
+        return toResponse(saved);
+    }
 
+    private OrderResponse toResponse(Order order) {
+        return new OrderResponse(
+                order.getId(), order.getCustomerId(), order.getProductCode(),
+                order.getQuantity(), order.getAmount(), order.getStatus(), order.getCreatedAt());
+    }
+    @Transactional(readOnly = true)
+    public OrderResponse getOrder(Long id) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new OrderNotFound(id));
+        return toResponse(order);
     }
 }

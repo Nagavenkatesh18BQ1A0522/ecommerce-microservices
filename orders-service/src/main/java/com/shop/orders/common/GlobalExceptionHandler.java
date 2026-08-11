@@ -1,6 +1,7 @@
 package com.shop.orders.common;
 
 
+import com.shop.orders.order.OrderNotFound;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -25,6 +26,14 @@ public class GlobalExceptionHandler {
         problem.setProperty("errors", errors);
         return problem;
 
+    }
+
+    @ExceptionHandler(OrderNotFound.class)
+    public ProblemDetail handleOrderNotFound(OrderNotFound ex) {
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+        problem.setTitle("Order not found");
+        problem.setDetail(ex.getMessage());
+        return problem;
     }
 
 }

@@ -10,8 +10,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -51,5 +53,14 @@ class OrderServiceTest {
         // Assert 2: the response is mapped from the saved order
         assertThat(response.productCode()).isEqualTo("BOOK-123");
         assertThat(response.status()).isEqualTo(OrderStatus.PLACED);
+    }
+
+    @Test
+    void getOrder_throwsOrderNotFound_whenMissing(){
+
+        when(orderRepository.findById(999L)).thenReturn(Optional.empty());
+        assertThatThrownBy(() -> orderService.getOrder(999L))
+                .isInstanceOf(OrderNotFound.class);
+
     }
 }
