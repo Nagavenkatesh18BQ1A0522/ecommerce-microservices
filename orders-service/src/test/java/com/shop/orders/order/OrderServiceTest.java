@@ -1,5 +1,7 @@
 package com.shop.orders.order;
 
+import com.shop.orders.inventory.InventoryClient;
+import com.shop.orders.inventory.InventoryView;
 import com.shop.orders.order.dto.CreateOrderRequest;
 import com.shop.orders.order.dto.OrderResponse;
 import org.junit.jupiter.api.Test;
@@ -24,12 +26,16 @@ class OrderServiceTest {
     @Mock
     OrderRepository orderRepository;
 
+    @Mock
+    InventoryClient inventoryClient;
+
     @InjectMocks
     OrderService orderService;
 
     @Test
     void createOrder_buildsOrderFromRequest_andSavesIt() {
         // Arrange
+        when(inventoryClient.getStock("BOOK-123")).thenReturn(new InventoryView("BOOK-123", 50));
         CreateOrderRequest request =
                 new CreateOrderRequest(1L, "BOOK-123", 2, new BigDecimal("49.99"));
         // when save() is called, just return whatever Order was passed in
