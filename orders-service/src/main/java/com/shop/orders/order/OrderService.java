@@ -4,6 +4,8 @@ import com.shop.orders.inventory.InventoryClient;
 import com.shop.orders.inventory.InventoryView;
 import com.shop.orders.order.dto.CreateOrderRequest;
 import com.shop.orders.order.dto.OrderResponse;
+import com.shop.orders.order.event.OrderEventPublisher;
+import com.shop.orders.order.event.OrderPlaced;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,11 +14,13 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final InventoryClient inventoryClient;
+    private final OrderEventPublisher eventPublisher;
 
 
-    public OrderService(OrderRepository orderRepository,InventoryClient inventoryClient) {
+    public OrderService(OrderRepository orderRepository,InventoryClient inventoryClient,OrderEventPublisher eventPublisher) {
         this.orderRepository = orderRepository;
         this.inventoryClient=inventoryClient;
+        this.eventPublisher = eventPublisher;
     }
     @Transactional
     public OrderResponse createOrder(CreateOrderRequest request) {
@@ -26,6 +30,9 @@ public class OrderService {
         }
         Order order = new Order(request.customerId(), request.productCode(), request.quantity(), request.amount());
         Order saved = orderRepository.save(order);
+        eventPublisher.publishOrderPlaced(new OrderPlaced(
+                saved.getId(), saved.getCustomerId(), saved.getProductCode(),
+                saved.getQuantity(), saved.getAmount()));
         return toResponse(saved);
     }
 

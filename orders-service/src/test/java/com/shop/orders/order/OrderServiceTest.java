@@ -4,6 +4,7 @@ import com.shop.orders.inventory.InventoryClient;
 import com.shop.orders.inventory.InventoryView;
 import com.shop.orders.order.dto.CreateOrderRequest;
 import com.shop.orders.order.dto.OrderResponse;
+import com.shop.orders.order.event.OrderEventPublisher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -28,6 +29,8 @@ class OrderServiceTest {
 
     @Mock
     InventoryClient inventoryClient;
+    @Mock
+    OrderEventPublisher eventPublisher;
 
     @InjectMocks
     OrderService orderService;
