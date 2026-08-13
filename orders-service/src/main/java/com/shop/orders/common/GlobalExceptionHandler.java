@@ -1,6 +1,7 @@
 package com.shop.orders.common;
 
 
+import com.shop.orders.inventory.InventoryUnavailable;
 import com.shop.orders.order.InsufficientStock;
 import com.shop.orders.order.OrderNotFound;
 import org.springframework.http.HttpStatus;
@@ -41,6 +42,14 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleInsufficientStock(InsufficientStock ex) {
         ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.CONFLICT);
         problem.setTitle("Insufficient stock");
+        problem.setDetail(ex.getMessage());
+        return problem;
+    }
+
+    @ExceptionHandler(InventoryUnavailable.class)
+    public ProblemDetail handleInventoryUnavailable(InventoryUnavailable ex) {
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.SERVICE_UNAVAILABLE);
+        problem.setTitle("Inventory service unavailable");
         problem.setDetail(ex.getMessage());
         return problem;
     }
