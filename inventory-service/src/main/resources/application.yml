@@ -19,6 +19,20 @@ spring:
     enabled: true
     baseline-on-migrate: true
 
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: inventory-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        # deserialize every message into OUR local event class...
+        spring.json.value.default.type: com.shop.inventory.stock.event.OrderPlacedEvent
+        # ...and ignore the sender's class-name header (orders' class doesn't exist here)
+        spring.json.use.type.headers: false
+        spring.json.trusted.packages: "com.shop.inventory.stock.event"
+
 server:
   port: 8082                    # orders=8081, inventory=8082
 

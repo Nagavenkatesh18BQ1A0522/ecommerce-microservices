@@ -21,5 +21,12 @@ public class InventoryItem {
         this.productCode= productCode;
         this.availableQuantity=availableQuantity;
     }
+    public void reduceStock(int quantity) {
+        if (quantity <= 0 || quantity > this.availableQuantity) {
+            throw new IllegalArgumentException(
+                    "Cannot reduce " + quantity + " from stock of " + this.availableQuantity + " for " + productCode);
+        }
+        this.availableQuantity -= quantity;
+    }
 
 }
